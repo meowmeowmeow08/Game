@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
         // Camera Handler
         Quaternion playerRotation = Quaternion.identity;
         playerRotation.y = playerCam.transform.rotation.y;
+        playerRotation.w = playerCam.transform.rotation.w;
         transform.rotation = playerRotation;
 
         // Movement System
