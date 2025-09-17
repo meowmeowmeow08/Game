@@ -3,25 +3,27 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    Vector3 cameraOffset = new Vector3(0, .5f, .2f);
-    Vector2 cameraRotation = Vector2.zero;
+    
     Camera playerCam;
-    InputAction lookAxis;
     Rigidbody rb;
+
+    Ray jumpRay;
 
     float inputX;
     float inputY;
 
-    public float Xsensitivity = .1f;
-    public float Ysensitivity = .1f;
+    public int health = 3;
+    public int maxHealth = 5;
+
     public float speed = 5f;
-    public float camRotationLimit = 90;
+    public float jumpHeight = 2.5f;
+    public float groundDetectionDistance = 1.1f;
 
     private void Start()
     {
+        jumpRay = new Ray();
         rb = GetComponent<Rigidbody>();
         playerCam = Camera.main;
-        lookAxis = GetComponent<PlayerInput>().currentActionMap.FindAction("Look");
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -33,6 +35,9 @@ public class PlayerController : MonoBehaviour
         playerRotation.y = playerCam.transform.rotation.y;
         playerRotation.w = playerCam.transform.rotation.w;
         transform.rotation = playerRotation;
+
+        jumpRay.origin = transform.position;
+        jumpRay.direction = -transform.up;
 
         // Movement System
         Vector3 tempMove = rb.linearVelocity;
@@ -51,5 +56,29 @@ public class PlayerController : MonoBehaviour
 
         inputX = InputAxis.x;
         inputY = InputAxis.y;
+    }
+
+    public void Jump()
+    {
+        if (Physics.Raycast(jumpRay, groundDetectionDistance))
+            rb.AddForce(transform.up * jumpHeight, ForceMode.Impulse);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "hazard")
+            health--;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "killzone")
+            health = 0;
+
+        if (other.tag == "health" && health < maxHealth)
+        {
+            health++;
+            Destroy(other.gameObject);
+        }
     }
 }
