@@ -8,6 +8,8 @@ TagManager:
   - health
   - hazard
   - killzone
+  - proj
+  - weapon
   layers:
   - Default
   - TransparentFX
