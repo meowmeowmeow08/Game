@@ -16,6 +16,7 @@ public class Weapon : MonoBehaviour
     [Header("Meta Attributes")]
     public bool canFire = true;
     public bool holdToAttack = true;
+    public bool reloading = false;
     public int weaponID;
     public string weaponName;
 
@@ -51,7 +52,7 @@ public class Weapon : MonoBehaviour
             Destroy(p, projLifespan);
             clip--;
             canFire = false;
-            StartCoroutine("cooldownFire", rof);
+            StartCoroutine("cooldownFire");
         }
     }
 
@@ -76,6 +77,8 @@ public class Weapon : MonoBehaviour
                 ammo -= reloadCount;
             }
 
+            reloading = true;
+            canFire = false;
             StartCoroutine("cooldownFire", reloadCooldown);
             return;
         }
@@ -108,11 +111,19 @@ public class Weapon : MonoBehaviour
         this.player = null;
     }
 
-    IEnumerator cooldownFire(float cooldownTime)
+    IEnumerator cooldownFire()
     {
-        yield return new WaitForSeconds(cooldownTime);
+        yield return new WaitForSeconds(rof);
         
         if(clip > 0)
             canFire = true;
+    }
+
+    IEnumerator reloadingCooldown()
+    {
+        yield return new WaitForSeconds(reloadCooldown);
+
+        reloading = false;
+        canFire = true;
     }
 }

@@ -99,6 +99,7 @@ public class PlayerController : MonoBehaviour
     public void Reload()
     {
         if (currentWeapon)
+            if (!currentWeapon.reloading)
             currentWeapon.reload();
     }
 
@@ -107,7 +108,13 @@ public class PlayerController : MonoBehaviour
         if (pickupObj)
         {
             if (pickupObj.tag == "weapon")
+            {
+                if (currentWeapon)
+                    DropWeapon();
+
                 pickupObj.GetComponent<Weapon>().equip(this);
+            }
+            pickupObj = null;
         }
         else
             Reload();
