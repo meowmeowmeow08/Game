@@ -10,6 +10,11 @@ TagManager:
   - killzone
   - proj
   - weapon
+  - ui_health
+  - ui_ammo
+  - ui_clip
+  - gm
+  - ui_pause
   layers:
   - Default
   - TransparentFX
