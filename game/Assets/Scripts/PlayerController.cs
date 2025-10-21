@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviour
 
     public bool attacking = false;
 
+    PlayerInput _pi;
+
     private void Start()
     {
         input = GetComponent<PlayerInput>();
@@ -39,6 +41,10 @@ public class PlayerController : MonoBehaviour
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+        var act = _pi?.actions?.FindAction("Interact");
+        if (act != null && act.WasPressedThisFrame())
+            Debug.Log("Interact action performed this frame");
     }
     private void Update()
     {
@@ -61,6 +67,10 @@ public class PlayerController : MonoBehaviour
             {
 
                 pickupObj = interactHit.collider.gameObject;
+                // In Update(), after you set pickupObj:
+                //if (pickupObj) Debug.Log("Pickup target: " + pickupObj.name);
+
+                
             }
         }
         else
@@ -103,6 +113,13 @@ public class PlayerController : MonoBehaviour
             currentWeapon.reload();
     }
 
+    // Relay for Reload (calls your no-arg Reload)
+    public void OnReload(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.performed) return;
+        Reload();
+    }
+
     public void Interact()
     {
         if (pickupObj)
@@ -111,6 +128,8 @@ public class PlayerController : MonoBehaviour
             {
                 if (currentWeapon)
                     DropWeapon();
+                // In Interact(), right before equip:
+                Debug.Log("Interact pressed; pickupObj = " + (pickupObj ? pickupObj.name : "null"));
 
                 pickupObj.GetComponent<Weapon>().equip(this);
             }
@@ -119,6 +138,14 @@ public class PlayerController : MonoBehaviour
         else
             Reload();
     }
+
+    // Relay for Interact (calls your no-arg Interact)
+    public void OnInteract(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.performed) return;
+        Interact();
+    }
+
     public void DropWeapon()
     {
         if (currentWeapon)
@@ -129,6 +156,11 @@ public class PlayerController : MonoBehaviour
 
     public void Move(InputAction.CallbackContext context)
     {
+        if (context.canceled) 
+        {
+            inputX = 0; inputY = 0; return; 
+        }
+
         Vector2 InputAxis = context.ReadValue<Vector2>();
 
         inputX = InputAxis.x;
@@ -139,6 +171,18 @@ public class PlayerController : MonoBehaviour
     {
         if (Physics.Raycast(jumpRay, groundDetectionDistance))
             rb.AddForce(transform.up * jumpHeight, ForceMode.Impulse);
+    }
+
+    public void OnJump(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.performed) return;
+        Jump();
+    }
+
+    public void OnPause(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.performed) return;
+        if (GameManager.Instance != null) GameManager.Instance.TogglePause();
     }
 
     private void OnCollisionEnter(Collision collision)
