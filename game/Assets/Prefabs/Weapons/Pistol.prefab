@@ -160,7 +160,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 0.3164847
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
@@ -257,8 +257,8 @@ MonoBehaviour:
   reloading: 0
   weaponID: 0
   weaponName: Pistol
-  projLifespan: 1
-  projVelocity: 10000
+  projLifespan: 3
+  projVelocity: 50
   reloadCooldown: 1
   rof: 0.01
   fireModes: 0

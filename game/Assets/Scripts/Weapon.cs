@@ -57,6 +57,11 @@ public class Weapon : MonoBehaviour
             weaponSpeaker.Play();
             GameObject p = Instantiate(projectile, firePoint.position, firePoint.rotation);
 
+            var rb = p.GetComponent<Rigidbody>();
+
+            // BEST: set velocity directly
+            rb.linearVelocity = firingDirection.transform.forward * projVelocity;
+
             Projectile proj = p.GetComponent<Projectile>();
             if (proj)
             {
@@ -67,8 +72,8 @@ public class Weapon : MonoBehaviour
                 // If you later mount it on enemies, set their tag to "Enemy" and this will still work.
                 proj.ownerTag = (player != null && player.CompareTag("Player")) ? "Player" : gameObject.tag;
             }
-
-            p.GetComponent<Rigidbody>().AddForce(firingDirection.transform.forward * projVelocity);
+            
+            //p.GetComponent<Rigidbody>().AddForce(firingDirection.transform.forward * projVelocity);
             Destroy(p, projLifespan);
             clip--;
             canFire = false;

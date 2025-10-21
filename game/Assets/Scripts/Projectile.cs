@@ -26,7 +26,20 @@ public class Projectile : MonoBehaviour
     // Handle trigger volumes if projectile/targets use triggers
     private void OnTriggerEnter(Collider other)
     {
-        TryDamage(other);
+        // Ignore the shooter
+        if (!string.IsNullOrEmpty(ownerTag) && other.CompareTag(ownerTag))
+            return;
+
+        var h = other.GetComponent<Health>();
+        if (h)
+        {
+            h.TakeDamage(damage);
+            Destroy(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject); // optional: only destroy on hittable layers
+        }
     }
 
     void TryDamage(Collider hit)
