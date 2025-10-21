@@ -29,6 +29,7 @@ public class Weapon : MonoBehaviour
     public int currentFireMode;
     public int clip;
     public int clipSize;
+    public int damage = 1;
 
     [Header("Ammo Stats")]
     public int ammo;
@@ -40,14 +41,33 @@ public class Weapon : MonoBehaviour
     {
         weaponSpeaker = GetComponent<AudioSource>();
         firePoint = transform.GetChild(0);
+
+        // Sanity check: warn if projectile is missing or wrong type
+        if (projectile == null || projectile.GetComponent<Projectile>() == null)
+            Debug.LogError($"{name}: 'projectile' field is not set to a valid Projectile prefab.");
     }
 
     public void fire()
     {
-        if(canFire && clip > 0 && weaponID > -1)
+        // Block firing unless the weapon is actually equipped by a player
+        if (player == null) return;
+
+        if (canFire && clip > 0 && weaponID > -1)
         {
             weaponSpeaker.Play();
             GameObject p = Instantiate(projectile, firePoint.position, firePoint.rotation);
+
+            Projectile proj = p.GetComponent<Projectile>();
+            if (proj)
+            {
+                proj.damage = damage;
+                proj.lifespan = projLifespan;
+
+                // If this weapon is held by the player, ownerTag will be "Player".
+                // If you later mount it on enemies, set their tag to "Enemy" and this will still work.
+                proj.ownerTag = (player != null && player.CompareTag("Player")) ? "Player" : gameObject.tag;
+            }
+
             p.GetComponent<Rigidbody>().AddForce(firingDirection.transform.forward * projVelocity);
             Destroy(p, projLifespan);
             clip--;
