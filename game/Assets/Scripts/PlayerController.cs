@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,6 +11,7 @@ public class PlayerController : MonoBehaviour
     Ray interactRay;
     RaycastHit interactHit;
     GameObject pickupObj;
+    bool attackLocked = false;
 
     public PlayerInput input;
     public Transform weaponSlot;
@@ -78,7 +80,14 @@ public class PlayerController : MonoBehaviour
 
         if (currentWeapon)
             if (currentWeapon.holdToAttack && attacking)
-                currentWeapon.fire();
+            {
+                // Block during pause or grace
+                if (GameManager.Instance && (GameManager.Instance.isPaused || GameManager.Instance.unpauseGraceActive)) { }
+                else if (!attackLocked)
+                {
+                    currentWeapon.fire();
+                }
+            }
 
         // Movement System
         Vector3 tempMove = rb.linearVelocity;
@@ -92,6 +101,10 @@ public class PlayerController : MonoBehaviour
     }
     public void Attack(InputAction.CallbackContext context)
     {
+        // Don’t accept attack while paused or locked
+        if ((GameManager.Instance && GameManager.Instance.isPaused) || attackLocked)
+            return;
+
         if (currentWeapon)
         {
             if (currentWeapon.holdToAttack)
@@ -101,11 +114,26 @@ public class PlayerController : MonoBehaviour
                 else
                     attacking = false;
             }
-
             else if (context.ReadValueAsButton())
+            {
                 currentWeapon.fire();
+            }
         }
     }
+
+    public void ClearAttackState()
+    {
+        attacking = false;
+        StartCoroutine(AttackLockoutOneFrame());
+    }
+
+    System.Collections.IEnumerator AttackLockoutOneFrame()
+    {
+        attackLocked = true;
+        yield return null;             // skip one frame
+        attackLocked = false;
+    }
+
     public void Reload()
     {
         if (currentWeapon)

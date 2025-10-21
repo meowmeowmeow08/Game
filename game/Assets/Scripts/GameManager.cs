@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     TextMeshProUGUI clipCounter;   // Tag: "ui_clip"
 
     public bool isPaused = false;
+    public bool unpauseGraceActive = false;
 
     void Awake()
     {
@@ -103,6 +104,21 @@ public class GameManager : MonoBehaviour
 
         Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
         Cursor.visible = isPaused;
+
+        //when we UNPAUSE, reset player attack and add a brief grace window
+        if (!isPaused)
+        {
+            if (player != null) player.ClearAttackState();
+            StartCoroutine(UnpauseGrace());
+        }
+    }
+
+    IEnumerator UnpauseGrace()
+    {
+        unpauseGraceActive = true;
+        yield return null;                       // one frame
+        yield return new WaitForSecondsRealtime(0.1f); // ~100ms grace
+        unpauseGraceActive = false;
     }
 
     public void GameOver()
@@ -145,6 +161,20 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene(i + 1);
         else
             SceneManager.LoadScene("MainMenu");
+    }
+
+    public void QuitGame()
+    {
+        // If you ever paused, make sure time is restored
+        Time.timeScale = 1f;
+
+        #if UNITY_EDITOR
+                // Stop Play Mode in the editor
+                UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            // Close the app in a build
+            Application.Quit();
+        #endif
     }
 
     void Update()

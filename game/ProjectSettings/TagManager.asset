@@ -15,7 +15,7 @@ TagManager:
   - ui_clip
   - gm
   - ui_pause
-  - gameover
+  - ui_death
   layers:
   - Default
   - TransparentFX
