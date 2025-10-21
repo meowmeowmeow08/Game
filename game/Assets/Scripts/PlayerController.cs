@@ -120,30 +120,38 @@ public class PlayerController : MonoBehaviour
         Reload();
     }
 
-    public void Interact()
+    GameObject GetPickupTarget()
     {
-        if (pickupObj)
-        {
-            if (pickupObj.tag == "weapon")
-            {
-                if (currentWeapon)
-                    DropWeapon();
-                // In Interact(), right before equip:
-                Debug.Log("Interact pressed; pickupObj = " + (pickupObj ? pickupObj.name : "null"));
-
-                pickupObj.GetComponent<Weapon>().equip(this);
-            }
-            pickupObj = null;
-        }
-        else
-            Reload();
+        if (playerCam == null) playerCam = Camera.main;
+        Ray ray = new Ray(playerCam.transform.position, playerCam.transform.forward);
+        if (Physics.Raycast(ray, out RaycastHit hit, interactDistance))
+            if (hit.collider.CompareTag("weapon"))
+                return hit.collider.gameObject;
+        return null;
     }
 
-    // Relay for Interact (calls your no-arg Interact)
+    // Keep your relay:
     public void OnInteract(InputAction.CallbackContext ctx)
     {
         if (!ctx.performed) return;
         Interact();
+    }
+
+    // Update Interact() to prefer a fresh raycast:
+    public void Interact()
+    {
+        var target = GetPickupTarget();              // <- new
+        if (target == null) target = pickupObj;      // fallback to cached
+
+        if (target != null)
+        {
+            if (currentWeapon) DropWeapon();
+            target.GetComponent<Weapon>().equip(this);
+            return;
+        }
+
+        if (currentWeapon && !currentWeapon.reloading)
+            currentWeapon.reload();
     }
 
     public void DropWeapon()
