@@ -32,25 +32,25 @@ public class TouchDamage : MonoBehaviour
 
     void TryHurt(Collider other)
     {
-        Debug.Log("Hit player");
-
         if (!other.CompareTag("Player")) return;
         if (Time.time - lastHitTime < hitCooldown) return;
 
-        var hp = other.GetComponent<Health>();
+        var hp = other.GetComponent<Health>()
+              ?? other.GetComponentInParent<Health>()
+              ?? other.GetComponentInChildren<Health>();
         if (hp == null) return;
 
         hp.TakeDamage(damage);
         lastHitTime = Time.time;
 
-        // Knockback (optional but feels good)
-        var rb = other.attachedRigidbody ?? other.GetComponent<Rigidbody>();
-        if (rb != null)
+        // NEW: push the player via their controller, not physics
+        var pc = other.GetComponent<PlayerController>()
+              ?? other.GetComponentInParent<PlayerController>()
+              ?? other.GetComponentInChildren<PlayerController>();
+        if (pc != null)
         {
-            Vector3 dir = (other.transform.position - transform.position).normalized;
-            if (faceOnlyHorizontal) dir.y = 0f;
-            dir = dir.sqrMagnitude > 0.001f ? dir.normalized : transform.forward;
-            rb.AddForce(dir * knockbackForce, ForceMode.Impulse);
+            pc.ApplyKnockback(transform.position, knockbackForce); // e.g., 6–12 feels good
         }
     }
+
 }
