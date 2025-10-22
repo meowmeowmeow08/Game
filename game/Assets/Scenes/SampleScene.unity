@@ -571,26 +571,6 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
---- !u!1 &393977668 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 369777568303176649, guid: e8251c071ed62464086698281658f442, type: 3}
-  m_PrefabInstance: {fileID: 5823405084699303856}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &393977675
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 393977668}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96ee23ef67698464d9fce284051be9eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 5
-  currentHealth: 5
-  destroyOnDeath: 1
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -746,7 +726,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 711, y: -446.8}
+  m_AnchoredPosition: {x: 780.30005, y: -466.2}
   m_SizeDelta: {x: 267, y: 61}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &453084515
@@ -1470,7 +1450,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -756, y: -366.18}
+  m_AnchoredPosition: {x: -756, y: -474.18}
   m_SizeDelta: {x: 256.6531, y: 68.534}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1127082378
@@ -1739,7 +1719,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 711, y: -446.8}
+  m_AnchoredPosition: {x: 780.3, y: -466.2}
   m_SizeDelta: {x: 267, y: 61}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1160320418
@@ -2105,7 +2085,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -768, y: -298}
+  m_AnchoredPosition: {x: -768, y: -406}
   m_SizeDelta: {x: 227.9794, y: 67.8329}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1327513325
@@ -3279,6 +3259,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HealthPickup
       objectReference: {fileID: 0}
+    - target: {fileID: 4898478433697959389, guid: 65110bdff99358241a0276aeba325cf6, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f0165bc80fef47545bcc9bd02174a27a, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3432,6 +3416,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5505767223325322833, guid: cab1ce180fd56d34194d8a4d077cf098, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
     - target: {fileID: 7126461070890228585, guid: cab1ce180fd56d34194d8a4d077cf098, type: 3}
       propertyPath: m_Name
       value: Player
@@ -3455,18 +3443,6 @@ PrefabInstance:
     - target: {fileID: 369777568303176649, guid: e8251c071ed62464086698281658f442, type: 3}
       propertyPath: m_Name
       value: BasicEnemy
-      objectReference: {fileID: 0}
-    - target: {fileID: 369777568303176649, guid: e8251c071ed62464086698281658f442, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3725953455593831889, guid: e8251c071ed62464086698281658f442, type: 3}
-      propertyPath: knockbackForce
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 7129704124992459595, guid: e8251c071ed62464086698281658f442, type: 3}
-      propertyPath: m_ProvidesContacts
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7762473186829308900, guid: e8251c071ed62464086698281658f442, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3511,10 +3487,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 369777568303176649, guid: e8251c071ed62464086698281658f442, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 393977675}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e8251c071ed62464086698281658f442, type: 3}
 --- !u!1001 &5915321059532322701
 PrefabInstance:
@@ -3621,6 +3594,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5944617376900032349, guid: 43c586d2e575db649b2aed78f1f78d12, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a739c56fbfe51db47bffab6313bfd325, type: 2}
     - target: {fileID: 6295558403073080420, guid: 43c586d2e575db649b2aed78f1f78d12, type: 3}
       propertyPath: m_Name
       value: BarrelODeath
