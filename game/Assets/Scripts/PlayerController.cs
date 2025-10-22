@@ -23,6 +23,9 @@ public class PlayerController : MonoBehaviour
     public int health = 3;
     public int maxHealth = 5;
 
+    Vector3 externalVelocity = Vector3.zero;  // accumulates knockback, dashes, etc.
+    [SerializeField] float externalDecay = 8f; // how fast knockback fades (units/sec)
+
     public float speed = 5f;
     public float jumpHeight = 2.5f;
     public float groundDetectionDistance = 1.1f;
@@ -88,16 +91,25 @@ public class PlayerController : MonoBehaviour
                     currentWeapon.fire();
                 }
             }
+        // Build planar velocity from input (W/S on forward axis, A/D on right axis)
+        Vector3 planar = (transform.forward * inputY + transform.right * inputX) * speed;
 
-        // Movement System
-        Vector3 tempMove = rb.linearVelocity;
+        // Keep whatever vertical velocity you already have (gravity/jump)
+        float vy = rb.linearVelocity.y;
 
-        tempMove.x = inputY * speed;
-        tempMove.z = inputX * speed;
+        // Combine with external knockback (no vertical kick unless you purposely add it)
+        Vector3 finalVel = planar + externalVelocity;
+        finalVel.y = vy;
 
-        rb.linearVelocity = (tempMove.x * transform.forward) +
-                            (tempMove.y * transform.up) +
-                            (tempMove.z * transform.right);
+        // Apply ONCE
+        rb.linearVelocity = finalVel;
+
+        // Decay external forces smoothly
+        externalVelocity = Vector3.MoveTowards(
+            externalVelocity,
+            Vector3.zero,
+            externalDecay * Time.deltaTime
+        );
     }
     public void Attack(InputAction.CallbackContext context)
     {
@@ -237,5 +249,17 @@ public class PlayerController : MonoBehaviour
             health++;
             Destroy(other.gameObject);
         }
+    }
+
+    // Call this from enemies to push the player
+    public void ApplyKnockback(Vector3 sourcePosition, float force)
+    {
+        Vector3 dir = (transform.position - sourcePosition);
+        dir.y = 0f;
+        if (dir.sqrMagnitude < 0.001f) dir = -transform.forward; // fallback
+        dir.Normalize();
+
+        // accumulate so multiple hits stack a bit
+        externalVelocity += dir * force;
     }
 }

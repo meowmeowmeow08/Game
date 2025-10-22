@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     // Scene refs (cached per scene)
     PlayerController player;
+    Health playerHealth;
 
     [Header("Optional wired in inspector; otherwise auto-found by tag")]
     [SerializeField] GameObject gameOverUI; // Tag fallback: "gameover"
@@ -59,6 +60,13 @@ public class GameManager : MonoBehaviour
         // Player
         var playerGO = GameObject.FindGameObjectWithTag("Player");
         player = playerGO ? playerGO.GetComponent<PlayerController>() : null;
+
+        //cache health component on the player rig (root or child)
+        playerHealth = null;
+        if (playerGO)
+            playerHealth = playerGO.GetComponent<Health>()
+                        ?? playerGO.GetComponentInChildren<Health>()
+                        ?? playerGO.GetComponentInParent<Health>();
 
         // Pause UI: prefer serialized, else tag
         if (pauseUI == null)
@@ -181,7 +189,7 @@ public class GameManager : MonoBehaviour
     {
         // Guard if a scene (like Main Menu) doesn’t have these yet
         if (player && healthBar)
-            healthBar.fillAmount = Mathf.Infinity != player.maxHealth ? (float)player.health / (float)player.maxHealth : 1f;
+            healthBar.fillAmount = (float)playerHealth.currentHealth / (float)playerHealth.maxHealth;
 
         if (player && player.currentWeapon != null)
         {

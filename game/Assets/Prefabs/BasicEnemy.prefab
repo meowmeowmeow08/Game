@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7129704124992459595}
   - component: {fileID: 3263489847275798017}
   - component: {fileID: 6812807913736437346}
+  - component: {fileID: 3725953455593831889}
   m_Layer: 0
   m_Name: BasicEnemy
   m_TagString: basicenemy
@@ -104,7 +105,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -144,3 +145,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edad0785bd2a41f49861a742c5de03d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3725953455593831889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 369777568303176649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0106efc7e53552e438a3793c7067a1b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 1
+  hitCooldown: 0.5
+  knockbackForce: 100
+  faceOnlyHorizontal: 1
